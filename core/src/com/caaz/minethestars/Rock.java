@@ -19,7 +19,7 @@ public class Rock extends FixtureDef implements Updatable, Destroyable {
         bodyDef.angularVelocity = (float)((Math.random()-.5)*1.5);
         this.density = .5f;
         body = world.createBody(bodyDef).createFixture(this).getBody();
-        body.applyLinearImpulse(new Vector2((float)((Math.random()-.5)*2),(float)((Math.random()-.5)*2)),body.getPosition(), true);
+        body.applyLinearImpulse(new Vector2((float)((Math.random()-.5)*4),(float)((Math.random()-.5)*4)),body.getPosition(), true);
         body.setUserData(new SpaceObject(0,this));
     }
     public Rock(World world, Vector2 position, float size) {

@@ -1,7 +1,9 @@
 package com.caaz.minethestars;
 
+import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,6 +16,7 @@ public class Player extends FixtureDef implements Updatable {
     private static int COOLDOWN = 15;
     private int heat = 0;
     private Game game;
+    private PointLight light;
     public Body body;
     public Player(Game game) {
         this.game = game;
@@ -38,11 +41,13 @@ public class Player extends FixtureDef implements Updatable {
         shape = polygonShape;
         body.createFixture(this);
         body.setUserData(new SpaceObject(1,this));
+        light = new PointLight(game.rayHandler, 360, new Color(.7f,.7f,1,.5f), 50f, 10f,10f);
     }
     public void update() {
-        if(heat > 0) heat--;
         Vector2 vel = body.getLinearVelocity();
         Vector2 pos = body.getPosition();
+        light.setPosition(pos);
+        if(heat > 0) heat--;
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && vel.y < MAX_VELOCITY){
             float angle = (float)(body.getAngle()+Math.toRadians(90));
             body.applyForceToCenter(new Vector2((float) (Math.cos(angle) * VELOCITY), (float) (Math.sin(angle) * VELOCITY)), true);

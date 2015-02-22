@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Bullet extends FixtureDef implements Updatable,Destroyable {
     private static float VELOCITY = 15f;
     private static float RADIUS = .2f;
+    private int lifeTime = 60;
     private boolean destroyMe = false;
     private World world;
     public Body body;
@@ -31,7 +32,8 @@ public class Bullet extends FixtureDef implements Updatable,Destroyable {
         destroyMe = true;
     }
     public void update() {
-        if(destroyMe && (!world.isLocked())){
+        lifeTime--;
+        if((destroyMe || (lifeTime<1)) && (!world.isLocked())){
             world.destroyBody(body);
         }
     }

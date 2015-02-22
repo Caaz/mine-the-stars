@@ -1,5 +1,7 @@
 package com.caaz.minethestars;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -16,24 +18,28 @@ public class Game extends ApplicationAdapter {
     private Box2DDebugRenderer debugRenderer;
     private Camera camera;
     private Viewport viewport;
+    public RayHandler rayHandler;
+    //private PointLight[] lights = new PointLight[STARS*2];
     @Override
 	public void create () {
         world = new World(new Vector2(0, 0f), true);
         world.setContactListener(new CollisionListener());
         debugRenderer = new Box2DDebugRenderer();
-        debugRenderer.setDrawVelocities(true);
-        debugRenderer.setDrawContacts(true);
-        debugRenderer.setDrawAABBs(true);
+        rayHandler = new RayHandler(world);
+        rayHandler.setAmbientLight(new Color(1,1,1,.1f));
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera(30, 30 * (h / w));
         viewport = new FitViewport(worldSize,worldSize, camera);
+        //rayHandler.useCustomViewport(viewport.getLeftGutterWidth(),viewport.getBottomGutterHeight(),viewport.getScreenWidth(),viewport.getScreenHeight());
         camera.position.set(worldSize/2,worldSize/2,0f);
         for(int i = 0; i<5; i++) new Rock(world,3);
         player = new Player(this);
 	}
     public void resize(int width, int height) {
         viewport.update(width, height);
+        rayHandler.useCustomViewport(viewport.getLeftGutterWidth(), viewport.getBottomGutterHeight(), viewport.getScreenWidth(), viewport.getScreenHeight());
+
     }
     public void update() {
         world.step(1 / 60f, 6, 2);
@@ -54,11 +60,13 @@ public class Game extends ApplicationAdapter {
         }
     }
 	@Override
-	public void render() {
+    public void render() {
         camera.update();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         debugRenderer.render(world, camera.combined);
+        rayHandler.setCombinedMatrix(camera.combined);
+        rayHandler.updateAndRender();
         update();
 	}
 }
