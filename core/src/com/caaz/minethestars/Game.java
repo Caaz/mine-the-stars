@@ -10,29 +10,33 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Game extends ApplicationAdapter {
-    private World world;
+    public World world;
+    public float worldSize = 20f;
+    private Player player;
     private Box2DDebugRenderer debugRenderer;
     private Camera camera;
     private Viewport viewport;
-    private float worldSize = 20f;
     @Override
 	public void create () {
         world = new World(new Vector2(0, 0f), true);
         debugRenderer = new Box2DDebugRenderer();
+        debugRenderer.setDrawVelocities(true);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera(30, 30 * (h / w));
         viewport = new FitViewport(worldSize,worldSize, camera);
         camera.position.set(worldSize/2,worldSize/2,0f);
         for(int i = 0; i<5; i++) new Rock(world,3);
+        player = new Player(this);
 	}
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
     public void update() {
         world.step(1/60f, 6, 2);
+        player.update();
+        float margins = 1f;
 
-        float margins = 2f;
 
         Array<Body> bodies = new Array<Body>();
         world.getBodies(bodies);
