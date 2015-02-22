@@ -16,6 +16,7 @@ public class Game extends ApplicationAdapter {
     private Box2DDebugRenderer debugRenderer;
     private Camera camera;
     private Viewport viewport;
+    private float worldSize = 20f;
     @Override
 	public void create () {
         world = new World(new Vector2(0, 0f), true);
@@ -23,8 +24,8 @@ public class Game extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera(30, 30 * (h / w));
-        viewport = new FitViewport(20,20, camera);
-        camera.position.set(10f,10f,0f);
+        viewport = new FitViewport(worldSize,worldSize, camera);
+        camera.position.set(worldSize/2,worldSize/2,0f);
 	}
     public void resize(int width, int height) {
         viewport.update(width, height);
@@ -38,26 +39,12 @@ public class Game extends ApplicationAdapter {
         world.getBodies(bodies);
         for(Body body : bodies) {
             Vector2 position = body.getPosition();
-            boolean warp = false;
-            if(position.x < 0) {
-                warp = true;
-                position.x += 20f;
-            }
-            else if(position.y < 0) {
-                warp = true;
-                position.y += 20f;
-            }
-            else if(position.x > 20) {
-                warp = true;
-                position.x -= 20f;
-            }
-            else if(position.y > 20) {
-                warp = true;
-                position.y -= 20f;
-            }
-            if(warp) {
-                body.setTransform(position,body.getAngle());
-            }
+            if(position.x < 0) position.x += worldSize;
+            else if(position.x > worldSize) position.x -= worldSize;
+            if(position.y < 0) position.y += worldSize;
+            else if(position.y > worldSize) position.y -= worldSize;
+            if(body.getPosition().equals(position)) body.setTransform(position, body.getAngle());
+
         }
     }
 	@Override
