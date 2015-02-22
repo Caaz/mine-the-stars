@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Player extends FixtureDef {
+public class Player extends FixtureDef implements Updatable {
     private static float MAX_VELOCITY = 40f;
     private static float VELOCITY = 2f;
     private static int COOLDOWN = 15;
@@ -37,6 +37,7 @@ public class Player extends FixtureDef {
         polygonShape.set(vertices);
         shape = polygonShape;
         body.createFixture(this);
+        body.setUserData(new SpaceObject(1,this));
     }
     public void update() {
         if(heat > 0) heat--;

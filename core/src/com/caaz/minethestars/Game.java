@@ -19,6 +19,7 @@ public class Game extends ApplicationAdapter {
     @Override
 	public void create () {
         world = new World(new Vector2(0, 0f), true);
+        world.setContactListener(new CollisionListener());
         debugRenderer = new Box2DDebugRenderer();
         debugRenderer.setDrawVelocities(true);
         debugRenderer.setDrawContacts(true);
@@ -35,12 +36,14 @@ public class Game extends ApplicationAdapter {
         viewport.update(width, height);
     }
     public void update() {
-        world.step(1/60f, 6, 2);
-        player.update();
+        world.step(1 / 60f, 6, 2);
         float margins = 1f;
         Array<Body> bodies = new Array<Body>();
         world.getBodies(bodies);
         for(Body body : bodies) {
+            SpaceObject spaceObject = (SpaceObject)(body.getUserData());
+            Updatable updatable = (Updatable)spaceObject.obj;
+            updatable.update();
             Vector2 position = body.getPosition();
             if(position.x < -margins) position.x += (worldSize+margins*2);
             else if(position.x > worldSize+margins) position.x -= (worldSize+margins*2);
@@ -58,4 +61,42 @@ public class Game extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
         update();
 	}
+}
+interface Updatable {
+    public void update();
+}
+interface Destroyable {
+    public void destroy();
+}
+class CollisionListener implements ContactListener {
+
+    @Override
+    public void beginContact(Contact contact) {
+       // contact.getFixtureA().isSensor();
+        SpaceObject dataA = (SpaceObject)(contact.getFixtureA().getBody().getUserData());
+        SpaceObject dataB = (SpaceObject)(contact.getFixtureB().getBody().getUserData());
+        if(dataB.isBullet()) {
+            if(dataA.isRock()) {
+                Destroyable rock = (Destroyable)dataA.obj;
+                rock.destroy();
+                Destroyable bullet = (Destroyable)dataB.obj;
+                bullet.destroy();
+            }
+        }
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
 }
