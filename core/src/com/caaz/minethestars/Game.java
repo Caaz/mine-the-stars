@@ -3,9 +3,7 @@ package com.caaz.minethestars;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -26,24 +24,25 @@ public class Game extends ApplicationAdapter {
         camera = new OrthographicCamera(30, 30 * (h / w));
         viewport = new FitViewport(worldSize,worldSize, camera);
         camera.position.set(worldSize/2,worldSize/2,0f);
+        for(int i = 0; i<5; i++) new Rock(world,3);
 	}
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
     public void update() {
         world.step(1/60f, 6, 2);
-        if(System.nanoTime() % 100 == 0) {
-            new Rock(world);
-        }
+
+        float margins = 2f;
+
         Array<Body> bodies = new Array<Body>();
         world.getBodies(bodies);
         for(Body body : bodies) {
             Vector2 position = body.getPosition();
-            if(position.x < 0) position.x += worldSize;
-            else if(position.x > worldSize) position.x -= worldSize;
-            if(position.y < 0) position.y += worldSize;
-            else if(position.y > worldSize) position.y -= worldSize;
-            if(body.getPosition().equals(position)) body.setTransform(position, body.getAngle());
+            if(position.x < -margins) position.x += (worldSize+margins*2);
+            else if(position.x > worldSize+margins) position.x -= (worldSize+margins*2);
+            else if(position.y < -margins) position.y += (worldSize+margins*2);
+            else if(position.y > worldSize+margins) position.y -= (worldSize+margins*2);
+            body.setTransform(position, body.getAngle());
 
         }
     }

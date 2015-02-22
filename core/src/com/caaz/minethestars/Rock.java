@@ -2,25 +2,20 @@ package com.caaz.minethestars;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-
-/**
- * Created by caaz on 2/21/15.
- */
 public class Rock extends FixtureDef {
-    public float density = .5f;
+    public float density = .1f;
     public float friction = 0.4f;
     public float restitution = 0.2f;
     public float size = 1f;
     private int points = 8;
-    public Rock(World world) {
+    public Rock(World world, float size) {
+        this.size = size;
         generateShape();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set((float) (Math.random() * 20), (float) (Math.random() * 20));
-        //bodyDef.angularVelocity = (float)((Math.random()-.5)*2);
+        bodyDef.angularVelocity = (float)((Math.random()-.5)*1.5);
         Body body = world.createBody(bodyDef).createFixture(this).getBody();
         body.applyLinearImpulse(new Vector2((float)((Math.random()-.5)*2),(float)((Math.random()-.5)*2)),body.getPosition(), true);
     }
