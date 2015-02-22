@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Game extends ApplicationAdapter {
     public World world;
     public float worldSize = 20f;
-    private Player player;
+    public Player player;
     private Box2DDebugRenderer debugRenderer;
     private Camera camera;
     private Viewport viewport;
@@ -21,6 +21,8 @@ public class Game extends ApplicationAdapter {
         world = new World(new Vector2(0, 0f), true);
         debugRenderer = new Box2DDebugRenderer();
         debugRenderer.setDrawVelocities(true);
+        debugRenderer.setDrawContacts(true);
+        debugRenderer.setDrawAABBs(true);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera(30, 30 * (h / w));
@@ -36,8 +38,6 @@ public class Game extends ApplicationAdapter {
         world.step(1/60f, 6, 2);
         player.update();
         float margins = 1f;
-
-
         Array<Body> bodies = new Array<Body>();
         world.getBodies(bodies);
         for(Body body : bodies) {
