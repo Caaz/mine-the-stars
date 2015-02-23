@@ -11,8 +11,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player extends FixtureDef implements Updatable {
-    private static float MAX_VELOCITY = 40f;
-    private static float VELOCITY = 2f;
+    private static float MAX_VELOCITY = 80f;
+    private static float VELOCITY = 6f;
     private static int COOLDOWN = 15;
     private int heat = 0;
     private Game game;
@@ -52,8 +52,8 @@ public class Player extends FixtureDef implements Updatable {
             float angle = (float)(body.getAngle()+Math.toRadians(90));
             body.applyForceToCenter(new Vector2((float) (Math.cos(angle) * VELOCITY), (float) (Math.sin(angle) * VELOCITY)), true);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) body.applyAngularImpulse(-.01f, true);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) body.applyAngularImpulse(.01f, true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) body.applyAngularImpulse(-VELOCITY/200, true);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) body.applyAngularImpulse(VELOCITY/200, true);
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
             if(heat<=0) {
                 new Bullet(game,pos);

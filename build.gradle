@@ -12,7 +12,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '1.0'
+    version = '1.1'
     ext {
         appName = 'Mine the Stars'
         gdxVersion = '1.5.4'
